@@ -191,8 +191,8 @@ jobs:
           if [ -n "$COSIGN_PRIVATE_KEY" ]; then
             echo "✅ Signing images with provided key..."
             for tag in ${{ steps.metadata.outputs.tags }}; do
-              echo "Signing ${IMAGE_REGISTRY}/${IMAGE_NAME}:${tag}"
-              cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${IMAGE_REGISTRY}/${IMAGE_NAME}:${tag}"
+              echo "Signing ${tag}"
+              cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${tag}"
             done
             echo "✅ All images signed successfully!"
           else
@@ -225,11 +225,11 @@ jobs:
       #     if [ -n "$COSIGN_PRIVATE_KEY" ] && [ -n "$SBOM_PATH" ] && [ -f "$SBOM_PATH" ]; then
       #       echo "✅ Attaching SBOM attestation to signed images..."
       #       for tag in ${{ steps.metadata.outputs.tags }}; do
-      #         echo "Attaching SBOM to ${IMAGE_REGISTRY}/${IMAGE_NAME}:${tag}"
+      #         echo "Attaching SBOM to ${tag}"
       #         cosign attest --yes --key env://COSIGN_PRIVATE_KEY \
       #           --predicate "${SBOM_PATH}" \
       #           --type spdx \
-      #           "${IMAGE_REGISTRY}/${IMAGE_NAME}:${tag}"
+      #           "${tag}"
       #       done
       #       echo "✅ SBOM attestations added successfully!"
       #     else
