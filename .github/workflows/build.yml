@@ -174,3 +174,64 @@ jobs:
           tags: ${{ steps.metadata.outputs.tags }}
           username: ${{ env.REGISTRY_USER }}
           password: ${{ env.REGISTRY_PASSWORD }}
+
+      # OPTIONAL: Image Signing with Cosign
+      # Image signing provides cryptographic verification of your images
+      # To enable signing, add your private key to GitHub Secrets as SIGNING_SECRET
+      # See README.md "Optional: Enable Image Signing" for setup instructions
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3.7.0
+        if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+
+      - name: Sign container image
+        if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+        env:
+          COSIGN_PRIVATE_KEY: ${{ secrets.SIGNING_SECRET }}
+        run: |
+          if [ -n "$COSIGN_PRIVATE_KEY" ]; then
+            echo "✅ Signing images with provided key..."
+            for tag in ${{ steps.metadata.outputs.tags }}; do
+              echo "Signing ${tag}"
+              cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${tag}"
+            done
+            echo "✅ All images signed successfully!"
+          else
+            echo "⚠️  SIGNING_SECRET not found. Skipping image signing."
+            echo ""
+            echo "Image signing is optional but recommended for production use."
+            echo "To enable signing:"
+            echo "  1. Run locally: cosign generate-key-pair"
+            echo "  2. Add cosign.key contents to GitHub Secrets as SIGNING_SECRET"
+            echo "  3. Update cosign.pub in the repository with your public key"
+            echo ""
+            echo "See README.md 'Optional: Enable Image Signing' section for details."
+          fi
+
+      # OPTIONAL: SBOM Attestation
+      # Attach the SBOM (Software Bill of Materials) to the signed image
+      # This requires image signing to be enabled (SIGNING_SECRET must be set)
+      # To enable:
+      #   1. First complete image signing setup above
+      #   2. Uncomment the "Setup Syft" and "Generate SBOM" steps above (around line 136)
+      #   3. Uncomment the "Add SBOM Attestation" step below
+      # Documentation: https://github.com/sigstore/cosign
+      #
+      # - name: Add SBOM Attestation
+      #   if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+      #   env:
+      #     COSIGN_PRIVATE_KEY: ${{ secrets.SIGNING_SECRET }}
+      #     SBOM_PATH: ${{ steps.generate-sbom.outputs.OUTPUT_PATH }}
+      #   run: |
+      #     if [ -n "$COSIGN_PRIVATE_KEY" ] && [ -n "$SBOM_PATH" ] && [ -f "$SBOM_PATH" ]; then
+      #       echo "✅ Attaching SBOM attestation to signed images..."
+      #       for tag in ${{ steps.metadata.outputs.tags }}; do
+      #         echo "Attaching SBOM to ${tag}"
+      #         cosign attest --yes --key env://COSIGN_PRIVATE_KEY \
+      #           --predicate "${SBOM_PATH}" \
+      #           --type spdx \
+      #           "${tag}"
+      #       done
+      #       echo "✅ SBOM attestations added successfully!"
+      #     else
+      #       echo "⚠️  SBOM attestation skipped (requires SIGNING_SECRET and SBOM generation)"
+      #     fi
