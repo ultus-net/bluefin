@@ -123,7 +123,7 @@ sudo systemctl reboot
 
 ## Optional: Enable Image Signing
 
-Image signing is disabled by default to let you start building immediately. However, signing is strongly recommended for production use.
+Image signing is now enabled in the workflow but will gracefully skip signing if you haven't set up your signing keys yet. This allows you to start building immediately while still having signing ready to activate. Signing is strongly recommended for production use.
 
 ### Why Sign Images?
 
@@ -134,7 +134,7 @@ Image signing is disabled by default to let you start building immediately. Howe
 
 ### Setup Instructions
 
-1. Generate signing keys:
+1. Generate signing keys locally (on your machine, not on GitHub):
 ```bash
 cosign generate-key-pair
 ```
@@ -157,13 +157,9 @@ This creates two files:
    - Replace the placeholder with your actual public key
    - Commit and push the change
 
-4. Enable signing in the workflow:
-   - Edit `.github/workflows/build.yml`
-   - Find the "OPTIONAL: Image Signing with Cosign" section.
-   - Uncomment the steps to install Cosign and sign the image (remove the `#` from the beginning of each line in that section).
-   - Commit and push the change
+4. Your next build will automatically sign images!
 
-5. Your next build will produce signed images!
+The workflow is already configured to sign images when `SIGNING_SECRET` is available. If the secret is not set, the build will still succeed but skip signing with a helpful message.
 
 Important: Never commit `cosign.key` to the repository. It's already in `.gitignore`.
 
@@ -177,7 +173,7 @@ Ready to take your custom OS to production? Enable these features for enhanced s
   - Provides cryptographic verification of your images
   - Prevents tampering and ensures authenticity
   - See "Optional: Enable Image Signing" section above for setup instructions
-  - Status: **Disabled by default** to allow immediate testing
+  - Status: **Enabled in workflow** - Add SIGNING_SECRET to activate signing
 
 - [ ] **Enable SBOM Attestation** (Recommended)
   - Generates Software Bill of Materials for supply chain security
