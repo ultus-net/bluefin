@@ -3,8 +3,24 @@
 # Format: INI file with [Flatpak Preinstall NAME] groups
 # See: https://docs.flatpak.org/en/latest/flatpak-command-reference.html#flatpak-preinstall
 
+# Games and Media
+[Flatpak Preinstall com.spotify.Client]
+Branch=stable
+
+[Flatpak Preinstall com.valvesoftware.Steam]
+Branch=stable
+
+[Flatpak Preinstall com.discordapp.Discord]
+Branch=stable
+
+[Flatpak Preinstall net.lutris.Lutris]
+Branch=stable
+
 # Web Browsers
 [Flatpak Preinstall org.mozilla.firefox]
+Branch=stable
+
+[Flatpak Preinstall org.chromium.Chromium]
 Branch=stable
 
 [Flatpak Preinstall org.mozilla.Thunderbird]
