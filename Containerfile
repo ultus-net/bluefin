@@ -27,9 +27,10 @@
 #    - @ublue-os/brew - Homebrew integration
 #
 # 2. Base Image Options:
+#    - `ghcr.io/ublue-os/bluefin-dx:latest` (Bluefin with developer tools - default)
 #    - `ghcr.io/ublue-os/silverblue-main:latest` (Fedora and GNOME)
-#    - `ghcr.io/ublue-os/base-main:latest` (Fedora and no desktop 
-#    - `quay.io/centos-bootc/centos-bootc:stream10 (CentOS-based)` 
+#    - `ghcr.io/ublue-os/base-main:latest` (Fedora and no desktop)
+#    - `quay.io/centos-bootc/centos-bootc:stream10` (CentOS-based) 
 #
 # See: https://docs.projectbluefin.io/contributing/ for architecture diagram
 ###############################################################################
@@ -44,14 +45,13 @@ COPY custom /custom
 COPY --from=ghcr.io/projectbluefin/common:latest /system_files /oci/common
 COPY --from=ghcr.io/ublue-os/brew:latest /system_files /oci/brew
 
-# Base Image - GNOME included
-FROM ghcr.io/ublue-os/silverblue-main:latest
+# Base Image - Bluefin DX with developer tools
+FROM ghcr.io/ublue-os/bluefin-dx:latest
 
-## Alternative base images, no desktop included (uncomment to use):
+## Alternative base images (uncomment to use):
+# FROM ghcr.io/ublue-os/silverblue-main:latest
 # FROM ghcr.io/ublue-os/base-main:latest    
 # FROM quay.io/centos-bootc/centos-bootc:stream10
-
-## Alternative GNOME OS base image (uncomment to use):
 # FROM quay.io/gnome_infrastructure/gnome-build-meta:gnomeos-nightly
 
 ### /opt
