@@ -42,14 +42,16 @@ echo "::endgroup::"
 echo "::group:: Configure Desktop Session"
 
 # Create COSMIC session file for GDM
-mkdir -p /usr/share/xsessions
-cat > /usr/share/xsessions/cosmic.desktop << 'COSMICDESKTOP'
+# COSMIC is a Wayland compositor, so the session file goes in wayland-sessions
+mkdir -p /usr/share/wayland-sessions
+cat > /usr/share/wayland-sessions/cosmic.desktop << 'COSMICDESKTOP'
 [Desktop Entry]
 Name=COSMIC
 Comment=COSMIC Desktop Environment
 Exec=cosmic-session
 Type=Application
 DesktopNames=COSMIC
+X-LightDM-Session-Type=wayland
 COSMICDESKTOP
 
 echo "COSMIC session configured for GDM"
