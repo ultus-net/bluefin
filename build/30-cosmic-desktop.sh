@@ -51,7 +51,7 @@ Comment=COSMIC Desktop Environment
 Exec=cosmic-session
 Type=Application
 DesktopNames=COSMIC
-X-LightDM-Session-Type=wayland
+X-GDM-Session-Type=wayland
 COSMICDESKTOP
 
 echo "COSMIC session configured for GDM"
