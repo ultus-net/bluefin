@@ -27,10 +27,10 @@
 #    - @ublue-os/brew - Homebrew integration
 #
 # 2. Base Image Options:
-#    - `ghcr.io/ublue-os/bluefin-dx:latest` (Bluefin with developer tools - default)
-#    - `ghcr.io/ublue-os/silverblue-main:latest` (Fedora and GNOME)
-#    - `ghcr.io/ublue-os/base-main:latest` (Fedora and no desktop)
-#    - `quay.io/centos-bootc/centos-bootc:stream10` (CentOS-based) 
+#    - `ghcr.io/ublue-os/bluefin-dx:latest` (Bluefin with developer tools, default)
+#    - `ghcr.io/ublue-os/silverblue-main:latest` (Fedora with GNOME, minimal)
+#    - `ghcr.io/ublue-os/base-main:latest` (Fedora base, no desktop)
+#    - `quay.io/centos-bootc/centos-bootc:stream10` (CentOS base) 
 #
 # See: https://docs.projectbluefin.io/contributing/ for architecture diagram
 ###############################################################################
